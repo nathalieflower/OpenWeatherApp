@@ -1,0 +1,21 @@
+﻿@model WeatherApp.Models.WeatherDetails
+
+@{
+    ViewBag.Title = "Index";
+}
+
+@using (Html.BeginForm("Index", "Home", FormMethod.Get))
+{
+    <div>
+        Search Locations:<br>
+        <input type="text" id="search" name="search" />
+        <input type="submit" id="submitId" name="submit" />
+    </div>
+}
+
+
+<div>
+    <h3>Location: @Model.name</h3>
+    <h3>Current Temp: @Model.main.temp</h3>
+    <h3>Humidity: @Model.main.humidity%</h3>
+</div>
