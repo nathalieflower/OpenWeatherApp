@@ -1,21 +1,34 @@
-﻿@model WeatherApp.Models.WeatherDetails
+﻿@model WeatherApp.Models.WeatherDetailsResult
 
 @{
     ViewBag.Title = "Index";
 }
+@Html.ValidationSummary(false)
 
-@using (Html.BeginForm("Index", "Home", FormMethod.Get))
+@using (Html.BeginForm("Index", "Home", FormMethod.Post))
 {
+
     <div>
         Search Locations:<br>
-        <input type="text" id="search" name="search" />
+        <input type="text" id="name" name="name" />
         <input type="submit" id="submitId" name="submit" />
     </div>
 }
 
+@if (Model != null && Model.WeatherDetails != null)
+{
+    <div>
+        <h3>Location: @Model.WeatherDetails.name</h3>
+        <h3>Current Temp: @Model.WeatherDetails.main.temp</h3>
+        <h3>Min Temp: @Model.WeatherDetails.main.temp_min</h3>
+        <h3>Max Temp: @Model.WeatherDetails.main.temp_max</h3>
+        <h3>Pressure: @Model.WeatherDetails.main.pressure</h3>
+        <h3>Humidity: @Model.WeatherDetails.main.humidity%</h3>
+    </div>
 
-<div>
-    <h3>Location: @Model.name</h3>
-    <h3>Current Temp: @Model.main.temp</h3>
-    <h3>Humidity: @Model.main.humidity%</h3>
-</div>
+    <div>
+        <h3>Sunrise: @Model.WeatherDetails.sys.sunrise</h3>
+        <h3>Sunrise: @Model.WeatherDetails.sys.sunset</h3>
+    </div>
+}
+.

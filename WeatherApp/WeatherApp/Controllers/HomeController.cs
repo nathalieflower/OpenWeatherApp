@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
@@ -12,41 +13,22 @@ namespace WeatherApp.Controllers
 {
     public class HomeController : Controller
     {
-        public const string apiKey = "f6ad1287a07ddeb1afbde1fe0b99db05";
-        public async Task<ActionResult> Index(string search)
+        public async Task<ActionResult> Index()
         {
-            return View(await GetWeather(search));
+            var model = await new WeatherDetailsRetriever().GetWeather("London");
+            return View(model);
         }
 
-        public async Task<WeatherDetails> GetWeather(string search)
+        [HttpPost]
+        public async Task<ActionResult> Index(WeatherDetails details)
         {
+            var model = await new WeatherDetailsRetriever().GetWeather(details.name);
 
-            if (search == null)
-            {
-                search = "London";
-            }
-            WeatherDetails weatherDetails = null;
-            string apiUrl = $"https://api.openweathermap.org/data/2.5/weather?q={search}&units=metric&APPID={apiKey}";
+            if(model.Status != HttpStatusCode.OK)
+                ModelState.AddModelError("city", "You have entered an invalid city please try again.");
 
-            using (HttpClient client = new HttpClient())
-            {
-                client.BaseAddress = new Uri(apiUrl);
-                client.DefaultRequestHeaders.Accept.Clear();
-                client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
-
-                HttpResponseMessage response = await client.GetAsync(apiUrl);
-                if (response.IsSuccessStatusCode)
-                {
-                    var jsonResponse = await response.Content.ReadAsStringAsync();
-                    weatherDetails = JsonConvert.DeserializeObject<WeatherDetails>(jsonResponse);
-                }
-
-                else
-                {
-                    throw new Exception("Location Not Valid");
-                }
-                return weatherDetails;
-            }
+            return View(model);
         }
+
     }
 }

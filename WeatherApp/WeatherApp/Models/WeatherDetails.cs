@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Newtonsoft.Json.Converters;
 
 namespace WeatherApp.Models
 {
@@ -49,7 +50,7 @@ namespace WeatherApp.Models
     public class Wind
     {
         public double speed { get; set; }
-        public int deg { get; set; }
+        public double deg { get; set; }
     }
 
     public class Clouds
@@ -63,7 +64,9 @@ namespace WeatherApp.Models
         public int id { get; set; }
         public double message { get; set; }
         public string country { get; set; }
-        public int sunrise { get; set; }
-        public int sunset { get; set; }
+        [JsonConverter(typeof(UnixDateTimeConverter))]
+        public DateTime sunrise { get; set; }
+        [JsonConverter(typeof(UnixDateTimeConverter))]
+        public DateTime sunset { get; set; }
     }
 }
